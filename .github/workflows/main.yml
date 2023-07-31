@@ -1,0 +1,48 @@
+name: Node CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-2022, ubuntu-latest]
+        node-version: [18.x]
+    steps:
+      - run: git config --global core.autocrlf false
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: node check
+        run: |
+          npm ci
+          npm run eslint:ci
+          npm run build
+          npm run test:ci
+  deploy:
+    if: startsWith(github.event.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          registry-url: 'https://registry.npmjs.org'
+      - name: deploy
+        run: |
+          PACKAGE_VERSION=$(cat package.json|grep version|head -1|awk -F: '{ print $2 }'|sed 's/[", ]//g')
+          echo "Package: $PACKAGE_VERSION"
+          echo "Tag: $GITHUB_REF_NAME"
+          if [ "$PACKAGE_VERSION" != "$GITHUB_REF_NAME" ]; then echo "$PACKAGE_VERSION and $GITHUB_REF_NAME are not the same, skipping"; exit 1; fi
+          echo "Publishing $PACKAGE_VERSION …"
+          npm ci
+          npm run build
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
