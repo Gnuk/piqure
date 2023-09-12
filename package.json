@@ -1,17 +1,22 @@
 {
   "name": "piqure",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A library to provide and inject for JavaScript and TypeScript",
   "main": "dist/Piqure.js",
   "typings": "src/Piqure.ts",
   "scripts": {
     "build": "tsc",
     "test": "vitest",
-    "test:ci": "vitest run --coverage",
+    "test:ci": "tsc --noEmit && vitest run --coverage",
     "test:coverage": "vitest --coverage",
-    "eslint:ci": "eslint './**/*.{ts,js}'",
-    "eslint": "eslint './**/*.{ts,js}' --fix"
+    "eslint:ci": "eslint \"./**/*.{ts,js}\"",
+    "eslint": "eslint \"./**/*.{ts,js}\" --fix"
   },
+  "repository": "github:Gnuk/piqure",
+  "bugs": {
+    "url": "https://github.com/Gnuk/piqure/issues"
+  },
+  "homepage": "https://github.com/Gnuk/piqure#readme",
   "author": "Anthony REY",
   "license": "MIT",
   "devDependencies": {
@@ -24,6 +29,6 @@
     "eslint-plugin-prettier": "^5.0.0",
     "prettier": "^3.0.0",
     "typescript": "^5.1.6",
-    "vitest": "^0.33.0"
+    "vitest": "^0.34.4"
   }
 }
