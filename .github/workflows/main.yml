@@ -1,20 +1,30 @@
 name: Node CI
 
-on: [push]
+on:
+  push:
+    tags:
+      - '*'
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
+  build-linux:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [windows-2022, ubuntu-latest]
-        node-version: [18.x]
+        node-version:
+          - 18
+          - 20
+          - 22
     steps:
-      - run: git config --global core.autocrlf false
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
+          cache: 'npm'
           node-version: ${{ matrix.node-version }}
       - name: node check
         run: |
@@ -22,17 +32,56 @@ jobs:
           npm run eslint:ci
           npm run build
           npm run test:ci
+        env:
+          CI: true
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          cache: 'npm'
+          node-version: 'lts/*'
+      - name: node check
+        run: |
+          npm ci
+          npm run eslint:ci
+          npm run build
+          npm run test:ci
+        env:
+          CI: true
+  # Summary job that allow checking for workflow status
+  # This job is used as required status check to pass before merging to the main branch
+  status-checks:
+    name: status-checks
+    needs: [build-windows, build-linux]
+    permissions:
+      contents: none
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Validation Status checks
+        run: |
+          echo 'Configuration for Status checks that are required'
+          echo '${{ toJSON(needs) }}'
+          if [[ (('skipped' == '${{ needs.build-linux.result }}') || ('success' == '${{ needs.build-linux.result }}')) && (('skipped' == '${{ needs.build-windows.result }}') || ('success' == '${{ needs.build-windows.result }}')) ]]; then
+            exit 0
+          fi
+          exit 1
   deploy:
     if: startsWith(github.event.ref, 'refs/tags/')
-    needs: build
+    needs: ["status-checks"]
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js 18.x
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          cache: 'npm'
+          node-version: 'lts/*'
           registry-url: 'https://registry.npmjs.org'
       - name: deploy
         run: |
