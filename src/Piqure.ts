@@ -23,9 +23,6 @@ export const piqureWrapper = (wrapper: object, field: string): Piqure => {
 
 export const piqure = (memory: Map<unknown, unknown> = new Map()): Piqure => {
   const provide: Provide = (key, injected) => {
-    if (memory.has(key)) {
-      throw new Error(`The value for the key ${key.toString()} already exists`);
-    }
     memory.set(key, injected);
   };
 

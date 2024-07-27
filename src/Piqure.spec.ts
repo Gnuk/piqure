@@ -35,12 +35,13 @@ describe('Piqure', () => {
     expect(inject(SECOND_KEY)).toBe('Text');
   });
 
-  it('Should not provide for same key multiple times', () => {
-    const { provide } = piqure();
+  it('Should override existing key', () => {
+    const { inject, provide } = piqure();
     const KEY = key<string>('Key');
     provide(KEY, 'Value');
+    provide(KEY, 'New value')
 
-    expect(() => provide(KEY, 'New value')).toThrow('The value for the key Symbol(Key) already exists');
+    expect(inject(KEY)).toBe('New value');
   });
 
   describe('With memory', () => {
