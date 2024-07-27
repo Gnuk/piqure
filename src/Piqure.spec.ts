@@ -39,7 +39,7 @@ describe('Piqure', () => {
     const { inject, provide } = piqure();
     const KEY = key<string>('Key');
     provide(KEY, 'Value');
-    provide(KEY, 'New value')
+    provide(KEY, 'New value');
 
     expect(inject(KEY)).toBe('New value');
   });
