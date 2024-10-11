@@ -86,4 +86,30 @@ describe('Piqure', () => {
       expect(wrapper.memory.size).toBe(5);
     });
   });
+
+  describe('Lazy Provider', () => {
+    it('should get lazy value', () => {
+      const { provideLazy, inject } = piqure();
+      const LAZY_KEY = key('Lazy key');
+      provideLazy(LAZY_KEY, () => 'Lazy value');
+
+      expect(inject(LAZY_KEY)).toBe('Lazy value');
+    });
+
+    it('should get value once', () => {
+      const { provideLazy, inject } = piqure();
+      let count = 0;
+      const LAZY_KEY = key('Lazy key');
+      const lazyProvider = (): number => {
+        count++;
+        return 42;
+      };
+      provideLazy(LAZY_KEY, lazyProvider);
+
+      inject(LAZY_KEY);
+      inject(LAZY_KEY);
+
+      expect(count).toBe(1);
+    });
+  });
 });
