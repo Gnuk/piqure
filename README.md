@@ -19,13 +19,16 @@ Classic usage:
 ```typescript
 import { key, piqure } from './Piqure';
 
-const { provide, inject } = piqure();
+const { provide, provideLazy, inject } = piqure();
 
 // Create an injection key with a type and a description
 const KEY_TO_INJECT = key<string>('Key to inject');
 
 // Register a text using provide
 provide(KEY_TO_INJECT, 'Injected text');
+
+// Register a text using provideLazy
+provideLazy(KEY_TO_INJECT, () => 'Injected text');
 
 // Use your text
 const injected = inject(KEY_TO_INJECT);
@@ -40,7 +43,7 @@ import { piqure } from './Piqure';
 
 const memory = new Map();
 
-const { provide, inject } = piqure(memory); // Now, the injected values will be inside "memory"
+const { provide, provideLazy, inject } = piqure(memory); // Now, the injected values will be inside "memory"
 
 // […]
 ```
@@ -50,7 +53,7 @@ Attach piqure to a wrapper like `window`:
 ```typescript
 import { piqureWrapper } from './Piqure';
 
-const { provide, inject } = piqureWrapper(window, 'piqure'); // This will reuse or create a "piqure" field
+const { provide, provideLazy, inject } = piqureWrapper(window, 'piqure'); // This will reuse or create a "piqure" field
 
 // […]
 ```
@@ -60,9 +63,9 @@ To expose `provide` and `inject` globally with the `window` (if you're in a brow
 ```typescript
 import { piqureWrapper } from './Piqure';
 
-const { provide, inject } = piqureWrapper(window, 'piqure');
+const { provide, provideLazy, inject } = piqureWrapper(window, 'piqure');
 
-export { provide, inject };
+export { provide, provideLazy, inject };
 ```
 
 ## Contribute
