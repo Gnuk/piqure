@@ -1,5 +1,5 @@
-import { InjectionKey, Provide, ProvideLazy } from './Providing';
-import { LazyValue, StaticValue, Value } from './Value';
+import type { InjectionKey, Provide, ProvideLazy } from './Providing';
+import { LazyValue, StaticValue, type Value } from './Value';
 
 export type ProvidePair<T> = [InjectionKey<T>, T];
 

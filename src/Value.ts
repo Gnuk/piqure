@@ -1,4 +1,4 @@
-import { Provider } from './Providing';
+import { type Provider } from './Providing';
 
 const ABSENT = Symbol('Absent');
 
