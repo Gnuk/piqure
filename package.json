@@ -1,6 +1,6 @@
 {
   "name": "piqure",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "A library to provide and inject for JavaScript and TypeScript",
   "main": "dist/Piqure.js",
   "typings": "src/Piqure.ts",
