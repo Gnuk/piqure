@@ -4,7 +4,7 @@ Just a dependency injection system in JavaScript.
 
 ## Prerequisites
 
-* [Node](https://nodejs.org/) LTS
+- [Node](https://nodejs.org/) LTS
 
 ## Install
 
