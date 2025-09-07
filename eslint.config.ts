@@ -11,6 +11,7 @@ export default defineConfig({ ignores: ['dist/**'] }, eslint.configs.recommended
       }),
     ],
     rules: {
+      '@typescript-eslint/consistent-type-imports': 'error',
       'import/order': ['error', { alphabetize: { order: 'asc', caseInsensitive: true }, 'newlines-between': 'always' }],
     },
   },
