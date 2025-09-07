@@ -16,7 +16,6 @@ jobs:
     strategy:
       matrix:
         node-version:
-          - 20
           - 22
           - 24
     steps:
@@ -29,7 +28,8 @@ jobs:
       - name: node check
         run: |
           npm ci
-          npm run eslint:ci
+          npm run lint:ci
+          npm run format:ci
           npm run build
           npm run test:ci
         env:
@@ -72,7 +72,7 @@ jobs:
           exit 1
   deploy:
     if: startsWith(github.event.ref, 'refs/tags/')
-    needs: ["status-checks"]
+    needs: ['status-checks']
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
