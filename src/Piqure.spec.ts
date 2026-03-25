@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { key, piqure, piqureWrapper } from './Piqure';
+import { key, keyFor, piqure, piqureWrapper } from './Piqure';
 
 describe('Piqure', () => {
   it.each([
@@ -42,6 +42,13 @@ describe('Piqure', () => {
     provide(KEY, 'New value');
 
     expect(inject(KEY)).toBe('New value');
+  });
+
+  it('Should create unique symbols for each key call with the same description', () => {
+    const FIRST_KEY = key<string>('Key');
+    const SECOND_KEY = key<string>('Key');
+
+    expect(FIRST_KEY).not.toBe(SECOND_KEY);
   });
 
   describe('With memory', () => {
@@ -88,7 +95,7 @@ describe('Piqure', () => {
   });
 
   describe('Lazy Provider', () => {
-    it('should get lazy value', () => {
+    it('Should get lazy value', () => {
       const { provideLazy, inject } = piqure();
       const LAZY_KEY = key('Lazy key');
       provideLazy(LAZY_KEY, () => 'Lazy value');
@@ -96,7 +103,7 @@ describe('Piqure', () => {
       expect(inject(LAZY_KEY)).toBe('Lazy value');
     });
 
-    it('should get value once', () => {
+    it('Should get value once', () => {
       const { provideLazy, inject } = piqure();
       let count = 0;
       const LAZY_KEY = key('Lazy key');
@@ -110,6 +117,31 @@ describe('Piqure', () => {
       inject(LAZY_KEY);
 
       expect(count).toBe(1);
+    });
+  });
+
+  describe('keyFor', () => {
+    it('Should return the same symbol for the same description', () => {
+      const FIRST_KEY = keyFor<string>('Key');
+      const SECOND_KEY = keyFor<string>('Key');
+
+      expect(FIRST_KEY).toBe(SECOND_KEY);
+    });
+
+    it('Should be different from key with the same description', () => {
+      const LOCAL_KEY = key<string>('Key');
+      const GLOBAL_KEY = keyFor<string>('Key');
+
+      expect(LOCAL_KEY).not.toBe(GLOBAL_KEY);
+    });
+
+    it('Should work with provide and inject', () => {
+      const { provide, inject } = piqure();
+      const GLOBAL_KEY = keyFor<string>('my-service');
+
+      provide(GLOBAL_KEY, 'injected value');
+
+      expect(inject(GLOBAL_KEY)).toBe('injected value');
     });
   });
 });

@@ -43,3 +43,5 @@ export const piqure = (memory: Map<unknown, Value<unknown>> = new Map()): Piqure
 };
 
 export const key = <T>(description: string): InjectionKey<T> => Symbol(description) as InjectionKey<T>;
+
+export const keyFor = <T>(description: string): InjectionKey<T> => Symbol.for(description) as InjectionKey<T>;
