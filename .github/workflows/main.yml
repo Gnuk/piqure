@@ -50,7 +50,7 @@ jobs:
       - name: node check
         run: |
           npm ci
-          npm run eslint:ci
+          npm run lint:ci
           npm run build
           npm run test:ci
         env:
