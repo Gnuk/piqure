@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "commonjs",
+    "rootDir": "./src",
     "removeComments": true,
     "preserveConstEnums": true,
     "outDir": "./dist",
