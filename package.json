@@ -29,9 +29,9 @@
   "author": "Anthony REY",
   "license": "MIT",
   "devDependencies": {
-    "@eslint/js": "^9.35.0",
+    "@eslint/js": "^10.0.0",
     "@vitest/coverage-v8": "^4.0.0",
-    "eslint": "^9.35.0",
+    "eslint": "^10.0.0",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import": "^2.26.0",
     "jiti": "^2.5.1",
