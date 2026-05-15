@@ -144,4 +144,29 @@ describe('Piqure', () => {
       expect(inject(GLOBAL_KEY)).toBe('injected value');
     });
   });
+
+  describe('has(key)', () => {
+    it('Should return true if the key is provided', () => {
+      const { provide, has } = piqure();
+      const KEY = key<string>('Key');
+      provide(KEY, 'Value');
+
+      expect(has(KEY)).toBe(true);
+    });
+
+    it('Should return false if the key is not provided', () => {
+      const { has } = piqure();
+      const KEY = key<string>('Key');
+
+      expect(has(KEY)).toBe(false);
+    });
+
+    it('Should return true when key is provided lazily', () => {
+      const { provideLazy, has } = piqure();
+      const k = key<string>('lazy-key');
+      provideLazy(k, () => 'hello');
+
+      expect(has(k)).toBe(true);
+    });
+  });
 });

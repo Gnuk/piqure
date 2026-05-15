@@ -8,6 +8,7 @@ interface Piqure {
   provideLazy: ProvideLazy;
   inject: <T>(key: InjectionKey<T>) => T;
   provides: (list: ProvidePair<unknown>[]) => void;
+  has: (key: InjectionKey<unknown>) => boolean;
 }
 
 export const piqureWrapper = (wrapper: object, field: string): Piqure => {
@@ -30,6 +31,9 @@ export const piqure = (memory: Map<unknown, Value<unknown>> = new Map()): Piqure
   return {
     provide,
     provideLazy,
+    has(key) {
+      return memory.has(key);
+    },
     inject<T>(key: InjectionKey<T>): T {
       if (!memory.has(key)) {
         throw new Error(`The key ${key.toString()} is not provided`);
