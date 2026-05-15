@@ -144,4 +144,37 @@ describe('Piqure', () => {
       expect(inject(GLOBAL_KEY)).toBe('injected value');
     });
   });
+
+  describe('Circular dependencies', () => {
+    it('Should throw when a lazy key directly depends on itself', () => {
+      const { provideLazy, inject } = piqure();
+      const A = key('A');
+
+      provideLazy(A, () => inject(A));
+
+      expect(() => inject(A)).toThrow('Circular dependency detected for key Symbol(A)');
+    });
+
+    it('Should throw when lazy keys form an indirect cycle', () => {
+      const { provideLazy, inject } = piqure();
+      const A = key('A');
+      const B = key('B');
+
+      provideLazy(A, () => inject(B));
+      provideLazy(B, () => inject(A));
+
+      expect(() => inject(A)).toThrow('Circular dependency detected for key Symbol(A)');
+    });
+
+    it('Should not throw for a non-circular dependency chain', () => {
+      const { provideLazy, inject } = piqure();
+      const A = key('A');
+      const B = key('B');
+
+      provideLazy(B, () => 'value-b');
+      provideLazy(A, () => inject(B));
+
+      expect(inject(A)).toBe('value-b');
+    });
+  });
 });
