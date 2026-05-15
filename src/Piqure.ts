@@ -28,6 +28,8 @@ export const piqure = (memory: Map<unknown, Value<unknown>> = new Map()): Piqure
     memory.set(key, new LazyValue(provider));
   };
 
+  const resolving = new Set();
+
   return {
     provide,
     provideLazy,
@@ -38,7 +40,18 @@ export const piqure = (memory: Map<unknown, Value<unknown>> = new Map()): Piqure
       if (!memory.has(key)) {
         throw new Error(`The key ${key.toString()} is not provided`);
       }
-      return memory.get(key)?.get() as T;
+
+      if (resolving.has(key)) {
+        throw new Error(`Circular dependency detected for key ${key.toString()}`);
+      }
+
+      resolving.add(key);
+
+      try {
+        return memory.get(key)?.get() as T;
+      } finally {
+        resolving.delete(key);
+      }
     },
     provides(list) {
       list.forEach(([key, value]) => provide(key, value));
