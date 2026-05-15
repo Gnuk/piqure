@@ -167,6 +167,9 @@ describe('Piqure', () => {
       provideLazy(k, () => 'hello');
 
       expect(has(k)).toBe(true);
+    });
+  });
+
   describe('Circular dependencies', () => {
     it('Should throw when a lazy key directly depends on itself', () => {
       const { provideLazy, inject } = piqure();
