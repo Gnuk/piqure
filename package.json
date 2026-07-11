@@ -1,9 +1,24 @@
 {
   "name": "piqure",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "description": "A library to provide and inject for JavaScript and TypeScript",
-  "main": "dist/Piqure.js",
-  "typings": "src/Piqure.ts",
+  "main": "./dist/Piqure.cjs",
+  "module": "./dist/Piqure.mjs",
+  "types": "./dist/Piqure.d.cts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/Piqure.d.mts",
+        "default": "./dist/Piqure.mjs"
+      },
+      "require": {
+        "types": "./dist/Piqure.d.cts",
+        "default": "./dist/Piqure.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
   "files": [
     "dist",
     "src",
@@ -12,7 +27,7 @@
     "tsconfig.json"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsdown",
     "test": "vitest",
     "test:ci": "tsc --noEmit && vitest run --coverage",
     "test:coverage": "vitest --coverage",
@@ -36,6 +51,7 @@
     "eslint-plugin-import-x": "^4.16.2",
     "jiti": "^2.5.1",
     "prettier": "^3.0.0",
+    "tsdown": "^0.22.4",
     "typescript": "^6.0.0",
     "typescript-eslint": "^8.42.0",
     "vitest": "^4.0.0"
