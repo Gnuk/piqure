@@ -52,7 +52,7 @@
     "jiti": "^2.5.1",
     "prettier": "^3.0.0",
     "tsdown": "^0.22.4",
-    "typescript": "^6.0.0",
+    "typescript": "^7.0.0",
     "typescript-eslint": "^8.42.0",
     "vitest": "^4.0.0"
   }
